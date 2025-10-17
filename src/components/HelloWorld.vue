@@ -1,22 +1,14 @@
 <script setup lang="ts">
-import {inject, ref} from 'vue'
-import {useAuth} from '@own3d/sdk/auth'
+import {storeToRefs} from 'pinia'
+import {useExtensionStore} from '../stores/extension.ts'
 
-const extension = inject('extension')
-const {onAuthorized} = useAuth(extension)
-const auth = ref()
-
-onAuthorized((user) => {
-  auth.value = user
-})
+const extensionStore = useExtensionStore()
+const {user, context} = storeToRefs(extensionStore)
 </script>
 
 <template>
-  {{ auth }}
+  <div>
+    User: {{ user }}
+    Context: {{ context }}
+  </div>
 </template>
-
-<style scoped>
-.read-the-docs {
-  color: #888;
-}
-</style>
