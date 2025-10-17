@@ -44,7 +44,8 @@ export const useExtensionStore = defineStore('extension', () => {
      * See Message Protocol → Message Reference for full schema and fragment types for chat messages.
      */
     on('notifysub', (data) => {
-        // Handle notifysub events here
+        // todo: handle notifysub events here if needed
+        console.log('Received notifysub event:', data)
     })
 
     return {
