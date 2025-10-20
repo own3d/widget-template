@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@own3d/sdk": "^0.0.34",
+    "@own3d/sdk": "^0.1.2",
     "@tailwindcss/vite": "^4.1.13",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.13",

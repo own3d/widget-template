@@ -1,19 +1,18 @@
 import {defineStore} from 'pinia'
 import type {Ref} from 'vue'
 import {inject, ref} from 'vue'
-import type {Authorized, Context, Extension} from '@own3d/sdk/types'
-import {useContext} from '@own3d/sdk/context'
-import {useAuth} from '@own3d/sdk/auth'
-import {useSocket} from '@own3d/sdk/socket'
+import type {Authorized, ChatMessage, Context, Extension, NotifySub} from '@own3d/sdk'
+import {useAuth, useChat, useContext, useSocket} from '@own3d/sdk'
 
 export const useExtensionStore = defineStore('extension', () => {
     const user: Ref<Authorized | null> = ref(null)
-    const context: Ref<Context | null> = ref(null)
+    const context: Ref<Context> = ref({} as Context)
 
     const extension: Extension = inject('extension') as Extension
     const {onContext} = useContext(extension)
     const {onAuthorized} = useAuth(extension)
     const {on} = useSocket(extension)
+    const {onMessage} = useChat(extension)
 
     /**
      * Receive context updates in real time
@@ -23,7 +22,7 @@ export const useExtensionStore = defineStore('extension', () => {
      *
      * Example: { environment: 'production', language: 'en', forms?: { ... } }
      */
-    onContext((newContext, changed) => {
+    onContext(<T extends Partial<Context>>(newContext: T, changed: ReadonlyArray<keyof T>) => {
         for (const key of changed) {
             context.value = {...context.value, [key]: newContext[key]}
         }
@@ -37,15 +36,24 @@ export const useExtensionStore = defineStore('extension', () => {
     })
 
     /**
-     * Receive streaming platform and extension events in real time
-     *  (e.g. subscriptions, donations, chat events, remote-config updates).
+     * Receive streaming platform events in real time
+     *  (e.g. follows, subscriptions, donations, etc.)
      *
      * See Event Types in NotifySub for full list of event types.
-     * See Message Protocol → Message Reference for full schema and fragment types for chat messages.
      */
-    on('notifysub', (data) => {
+    on('notifysub', (data: NotifySub) => {
         // todo: handle notifysub events here if needed
         console.log('Received notifysub event:', data)
+    })
+
+    /**
+     * Receive streaming platform chat message events in real time
+     *
+     * See Message Protocol → Message Reference for full schema and fragment types for chat messages.
+     */
+    onMessage((data: ChatMessage) => {
+        // todo: handle chat message events here if needed
+        console.log('Received chat message event:', data)
     })
 
     return {

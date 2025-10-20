@@ -1,6 +1,6 @@
 import './style.css'
 import { createApp } from 'vue'
-import { createExtension } from '@own3d/sdk/vue'
+import { createExtension } from '@own3d/sdk'
 import App from './App.vue'
 import {createPinia} from 'pinia'
 
